@@ -4,11 +4,18 @@
 
 - Graph representing monthly income and expenses and prediction
 - Calendar summary
-- Add stable income
-- Add one-time income
-- Add stable expenses
-- Add one-time expenses
+- Add expenses and incomes
 
 ## Data store
 
 - Local-first so use IndexedDB (use Dexie)
+
+```ts
+interface Entry {
+  amount: number; // Expense is just negative
+  date: Date;
+  description: string;
+  category: string;
+  enabled: boolean;
+}
+```
