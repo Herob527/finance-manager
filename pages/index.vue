@@ -6,6 +6,6 @@ const test = useDatabase();
 </script>
 
 <template>
-  <span>Test</span>
+  <span class="text-3xl">Test</span>
   <AddFinanceEntry />
 </template>
