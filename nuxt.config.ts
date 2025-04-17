@@ -14,5 +14,10 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
   ],
+  tailwindcss: {
+    editorSupport: true,
+    // editorSupport: { autocompleteUtil: { as: 'tailwindClasses' } }
+  },
   plugins: ['~/plugins/db-service-provider.ts'],
 });
+
