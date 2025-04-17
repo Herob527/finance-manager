@@ -1,11 +1,7 @@
 <script setup lang="ts">
-console.log("test");
 
-const test = () => {
-  return "2";
-};
 </script>
 
 <template>
-  <p> Test </p>
+  <span>Test</span>
 </template>

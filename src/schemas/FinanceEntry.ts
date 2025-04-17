@@ -1,4 +1,4 @@
-interface Entry {
+export interface Entry {
   id: number;
   amount: number; // Expense is just negative
   date: Date;
@@ -7,7 +7,7 @@ interface Entry {
   enabled: boolean;
 }
 export interface IEntryService {
-  add(entry: Entry): Promise<number>;
+  add(entry: Entry): Promise<void>;
   getAll(): Promise<Entry[]>;
   update(id: number, entry: Entry): Promise<void>;
   delete(id: number): Promise<void>;
