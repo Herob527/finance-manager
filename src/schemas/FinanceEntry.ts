@@ -1,4 +1,4 @@
-export interface Entry {
+export interface FinanceEntry {
   id: number;
   amount: number; // Expense is just negative
   date: Date;
@@ -6,10 +6,10 @@ export interface Entry {
   category: string;
   enabled: boolean;
 }
-export interface IEntryService {
-  add(entry: Entry): Promise<void>;
-  getAll(): Promise<Entry[]>;
-  update(id: number, entry: Entry): Promise<void>;
+export interface IFinanceService {
+  add(entry: FinanceEntry): Promise<void>;
+  getAll(): Promise<FinanceEntry[]>;
+  update(id: number, entry: FinanceEntry): Promise<void>;
   delete(id: number): Promise<void>;
   toggle(id: number): Promise<void>;
 }
