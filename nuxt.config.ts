@@ -15,7 +15,6 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
   ],
-  plugins: ['~/plugins/db-service-provider.ts'],
   vite: {
     plugins: [tailwindcss()],
   },
