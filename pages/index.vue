@@ -6,6 +6,8 @@ const test = useDatabase();
 </script>
 
 <template>
-  <span class="text-3xl">Test</span>
-  <AddFinanceEntry />
+  <main class="container mx-auto flex flex-col">
+    <span class="text-3xl">Test</span>
+    <AddFinanceEntry />
+  </main>
 </template>
