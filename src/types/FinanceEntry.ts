@@ -7,7 +7,7 @@ export interface FinanceEntry {
   enabled: boolean;
 }
 export interface IFinanceService {
-  add(entry: FinanceEntry): Promise<void>;
+  add(entry: Omit<FinanceEntry, 'id'>): Promise<void>;
   getAll(): Promise<FinanceEntry[]>;
   update(id: number, entry: FinanceEntry): Promise<void>;
   delete(id: number): Promise<void>;
