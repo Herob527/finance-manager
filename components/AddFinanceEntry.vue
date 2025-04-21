@@ -30,7 +30,7 @@ const schema = type({
     message: (ctx) => (ctx.code === 'proto' ? 'Date is required' : ''),
   }),
 });
-type Schema = typeof schema.infer;
+export type Schema = typeof schema.infer;
 
 const state = shallowReactive<Partial<Schema>>({
   date: undefined,
