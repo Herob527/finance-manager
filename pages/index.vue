@@ -6,7 +6,8 @@ import AddFinanceEntry, {
 import { useDatabase } from '../composable/use-database';
 import { from } from 'rxjs';
 import { useObservable } from '@vueuse/rxjs';
-import { today, getLocalTimeZone } from '@internationalized/date';
+import { getLocalTimeZone } from '@internationalized/date';
+import DisplayFinanceEntries from '../components/DisplayFinanceEntries.vue';
 
 const test = useDatabase();
 
@@ -35,9 +36,7 @@ const handleSubmit = (data: Schema) => {
       <AddFinanceEntry @submit="handleSubmit" />
       <div>
         <template v-if="data && data?.length > 0">
-          <span v-for="entry in data ?? []" :key="entry.id">
-            {{ entry.category }}
-          </span>
+          <DisplayFinanceEntries :data="data" />
         </template>
         <span v-else> No data yet </span>
       </div>
