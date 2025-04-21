@@ -6,7 +6,7 @@ export interface FinanceEntry {
   category: string;
   enabled: boolean;
 }
-export interface IFinanceService {
+export interface FinanceRepository {
   add(entry: Omit<FinanceEntry, 'id'>): Promise<void>;
   getAll(): Promise<FinanceEntry[]>;
   update(id: number, entry: FinanceEntry): Promise<void>;

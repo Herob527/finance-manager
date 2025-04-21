@@ -1,11 +1,11 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { FinanceEntry, IFinanceService } from '../types/FinanceEntry';
+import type { FinanceEntry, FinanceRepository } from '../types/FinanceEntry';
 
 type DexieStore = Dexie & {
   entries: EntityTable<FinanceEntry, 'id'>;
 };
 
-export default class IndexedDBStorage implements IFinanceService {
+export default class IndexedDBStorage implements FinanceRepository {
   readonly type = 'IndexedDB';
 
   private readonly db: DexieStore;

@@ -1,6 +1,6 @@
-import type { FinanceEntry, IFinanceService } from '../types/FinanceEntry';
+import type { FinanceEntry, FinanceRepository } from '../types/FinanceEntry';
 
-export default class LoggingStorage implements IFinanceService {
+export default class LoggingStorage implements FinanceRepository {
   constructor() {
     console.log('Dummy server started');
   }
