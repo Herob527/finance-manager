@@ -1,4 +1,4 @@
-import type { FinanceEntry, IFinanceService } from '../schemas/FinanceEntry';
+import type { FinanceEntry, IFinanceService } from '../types/FinanceEntry';
 
 export default class LoggingStorage implements IFinanceService {
   constructor() {
