@@ -1,6 +1,6 @@
-import type { Entry, IEntryService } from "../schemas/FinanceEntry";
+import type { FinanceEntry, IFinanceService } from '../schemas/FinanceEntry';
 
-export default class LoggingStorage implements IEntryService {
+export default class LoggingStorage implements IFinanceService {
   constructor() {
     console.log('Dummy server started');
   }
@@ -12,19 +12,18 @@ export default class LoggingStorage implements IEntryService {
     console.log('Dummy server deleting entry', id);
     return Promise.resolve();
   }
-  update(id: number, entry: Entry): Promise<void> {
+  update(id: number, entry: FinanceEntry): Promise<void> {
     console.log('Dummy server updating entry', id, entry);
     return Promise.resolve();
   }
 
-  add(entry: Entry): Promise<void> {
+  add(entry: FinanceEntry): Promise<void> {
     console.log('Dummy server adding entry', entry);
     return Promise.resolve();
   }
 
-  getAll(): Promise<Entry[]> {
+  getAll(): Promise<FinanceEntry[]> {
     console.log('Dummy server getting all entries');
     return Promise.resolve([]);
   }
-
 }
