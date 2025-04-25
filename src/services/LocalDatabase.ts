@@ -38,7 +38,9 @@ export default class IndexedDBStorage implements FinanceRepository {
   async toggle(id: number): Promise<void> {
     const entry = await this.db.entries.get(id);
     if (!entry) throw new Error(`FinanceEntry with id ${id} not found`);
-    entry.enabled = entry?.enabled ?? true;
-    await this.db.entries.update(id, entry);
+    await this.db.entries.update(id, {
+      ...entry,
+      enabled: !(entry.enabled ?? true),
+    });
   }
 }

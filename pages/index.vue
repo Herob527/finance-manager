@@ -28,6 +28,10 @@ const handleSubmit = (data: Schema) => {
     enabled: false,
   });
 };
+
+const handleToggle = async ({ id }: { id: number }) => {
+  await test.toggle(id);
+};
 </script>
 
 <template>
@@ -36,7 +40,10 @@ const handleSubmit = (data: Schema) => {
       <AddFinanceEntry @submit="handleSubmit" />
       <div>
         <template v-if="data && data?.length > 0">
-          <DisplayFinanceEntries :data="data" />
+          <DisplayFinanceEntries
+            :data="data"
+            @toggle="(id) => handleToggle({ id })"
+          />
         </template>
         <span v-else> No data yet </span>
       </div>
