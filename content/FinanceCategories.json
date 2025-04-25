@@ -1,0 +1,20 @@
+[
+  {
+    "id": "Groceries"
+  },
+  {
+    "id": "Entertainment"
+  },
+  {
+    "id": "Health"
+  },
+  {
+    "id": "Clothing"
+  },
+  {
+    "id": "Job"
+  },
+  {
+    "id": "Other"
+  }
+]
