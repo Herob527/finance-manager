@@ -32,6 +32,10 @@ const handleSubmit = (data: Schema) => {
 const handleToggle = async ({ id }: { id: number }) => {
   await test.toggle(id);
 };
+
+const handleRemove = async ({ id }: { id: number }) => {
+  await test.delete(id);
+};
 </script>
 
 <template>
@@ -43,6 +47,7 @@ const handleToggle = async ({ id }: { id: number }) => {
           <DisplayFinanceEntries
             :data="data"
             @toggle="(id) => handleToggle({ id })"
+            @delete="(id) => handleRemove({ id })"
           />
         </template>
         <span v-else> No data yet </span>

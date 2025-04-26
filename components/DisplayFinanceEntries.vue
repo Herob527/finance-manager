@@ -3,13 +3,13 @@ import { computed, h } from 'vue';
 import type { FinanceEntry } from '../src/types/FinanceEntry';
 import UTable, { type TableColumn } from '@nuxt/ui/components/Table.vue';
 import UCheckbox from '@nuxt/ui/components/Checkbox.vue';
+import UButton from '@nuxt/ui/components/Button.vue';
 import { CATEGORIES } from '../src/constants';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 
 const emit = defineEmits<{
-  (event: 'delete', id: number);
-  (event: 'toggle', id: number);
+  (event: 'toggle' | 'delete', id: number);
 }>();
 
 const columns = computed(
@@ -61,6 +61,15 @@ const columns = computed(
       {
         accessorKey: 'id',
         header: 'Delete',
+        cell: ({ row }) =>
+          h(
+            UButton,
+            {
+              color: 'error',
+              onClick: () => emit('delete', row.getValue('id')),
+            },
+            'Delete',
+          ),
       },
     ] as const satisfies TableColumn<FinanceEntry>[],
 );
