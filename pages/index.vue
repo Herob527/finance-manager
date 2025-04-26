@@ -8,6 +8,7 @@ import { from } from 'rxjs';
 import { useObservable } from '@vueuse/rxjs';
 import { getLocalTimeZone } from '@internationalized/date';
 import DisplayFinanceEntries from '../components/DisplayFinanceEntries.vue';
+import ChartDisplay from '../components/ChartDisplay.vue';
 
 const test = useDatabase();
 
@@ -56,6 +57,13 @@ const handleRemove = async ({ id }: { id: number }) => {
         </template>
         <span v-else> No data yet </span>
       </div>
+    </div>
+    <div class="mt-4">
+      <ChartDisplay
+        :data="
+          [...(data ?? [])].sort((a, b) => a.date.getTime() - b.date.getTime())
+        "
+      />
     </div>
   </main>
 </template>
