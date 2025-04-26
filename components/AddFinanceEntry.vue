@@ -18,7 +18,10 @@ const schema = type({
       return ctx.code === 'domain' ? 'Amount is required' : '';
     },
   }),
-  description: type.string.moreThanLength(3).or('undefined'),
+  description: type.string
+    .moreThanLength(3)
+    .or('undefined')
+    .or(type.string.atMostLength(0)),
   category: type.enumerated(...CATEGORIES.map((c) => c.value)).configure({
     message: (ctx) =>
       ctx.code === 'predicate' ? 'Category must be picked' : '',
