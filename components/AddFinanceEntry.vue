@@ -6,14 +6,11 @@ import UFormField from '@nuxt/ui/components/FormField.vue';
 import UCalendar from '@nuxt/ui/components/Calendar.vue';
 import type { FormSubmitEvent } from '@nuxt/ui';
 import { CalendarDate } from '@internationalized/date';
+import { CATEGORIES } from '../src/constants';
 
 const emit = defineEmits<{
   (e: 'submit', data: Schema): void;
 }>();
-
-const CATEGORIES = (
-  ['Groceries', 'Utilities', 'Entertainment', 'Other', 'Job'] as const
-).map((c) => ({ value: c.toLowerCase() as Lowercase<typeof c>, label: c }));
 
 const schema = type({
   amount: type.number.configure({
