@@ -30,10 +30,14 @@ const processData = (data = props.data) => {
     })),
     (value) => value._date,
   );
+  let currentSum = -500;
   return {
     keys: Object.keys(groupedData),
     values: Object.values(groupedData).map((value) =>
-      value.reduce((acc, cur) => acc + cur.amount, 0),
+      value.reduce((acc, cur) => {
+        currentSum += acc + cur.amount;
+        return currentSum;
+      }, 0),
     ),
   };
 };
@@ -62,6 +66,7 @@ onMounted(() => {
   const { keys, values } = processData();
   chartInstance = new Chart(chartContainer.value, {
     type: 'bar',
+
     data: {
       labels: keys,
       datasets: [
