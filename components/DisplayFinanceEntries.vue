@@ -3,6 +3,7 @@ import { computed, h } from 'vue';
 import type { FinanceEntry } from '../src/types/FinanceEntry';
 import UTable, { type TableColumn } from '@nuxt/ui/components/Table.vue';
 import UCheckbox from '@nuxt/ui/components/Checkbox.vue';
+import { CATEGORIES } from '../src/constants';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 
@@ -34,7 +35,9 @@ const columns = computed(
       {
         accessorKey: 'category',
         header: 'Category',
-        cell: ({ row }) => row.getValue<string>('category'),
+        cell: ({ row }) =>
+          CATEGORIES.find((c) => c.value === row.getValue('category'))?.label ??
+          '',
       },
       {
         accessorKey: 'description',
