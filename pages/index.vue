@@ -25,7 +25,7 @@ const handleSubmit = (data: Schema) => {
     description: data.description,
     amount: data.amount,
     category: data.category,
-    enabled: false,
+    enabled: true,
   });
 };
 
