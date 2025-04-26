@@ -45,26 +45,29 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   <UForm
     :schema="schema"
     :state="state"
-    class="space-y-4 border-primary-500 border-2 p-2 rounded-2xl"
+    class="flex flex-row gap-4 border-primary-500 border-2 p-4 rounded-2xl"
     @submit="handleSubmit"
   >
-    <span class="font-bold text-2xl mb-4"> Fill the data </span>
-    <UFormField label="Amount" name="amount">
-      <UInputNumber v-model="state.amount" />
-    </UFormField>
+    <div class="flex flex-col gap-4">
+      <span class="font-bold text-2xl mb-4"> Fill the data </span>
+      <UFormField label="Amount" name="amount">
+        <UInputNumber v-model="state.amount" />
+      </UFormField>
 
-    <UFormField label="Description" name="description">
-      <UInput v-model="state.description" />
-    </UFormField>
+      <UFormField label="Description" name="description">
+        <UInput v-model="state.description" />
+      </UFormField>
 
-    <UFormField label="Category" name="category">
-      <USelect v-model="state.category" :items="CATEGORIES" class="w-48" />
-    </UFormField>
+      <UFormField label="Category" name="category">
+        <USelect v-model="state.category" :items="CATEGORIES" class="w-48" />
+      </UFormField>
 
-    <UFormField label="Date" name="date">
-      <UCalendar v-model="state.date" />
-    </UFormField>
-
-    <UButton type="submit"> Submit </UButton>
+      <UButton type="submit" class="inline-flex w-min"> Submit </UButton>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+      <UFormField name="date">
+        <UCalendar v-model="state.date" />
+      </UFormField>
+    </div>
   </UForm>
 </template>
