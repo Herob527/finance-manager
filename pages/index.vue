@@ -46,6 +46,7 @@ const handleRemove = async ({ id }: { id: number }) => {
       <div>
         <template v-if="data && data?.length > 0">
           <DisplayFinanceEntries
+            class="border-2 border-primary-500 rounded-2xl"
             :data="data"
             @toggle="(id) => handleToggle({ id })"
             @delete="(id) => handleRemove({ id })"
