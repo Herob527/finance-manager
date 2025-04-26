@@ -43,11 +43,13 @@ const handleRemove = async ({ id }: { id: number }) => {
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
     <div class="flex flex-row gap-4 mt-4">
       <AddFinanceEntry @submit="handleSubmit" />
-      <div>
+      <div class="flex-1">
         <template v-if="data && data?.length > 0">
           <DisplayFinanceEntries
             class="border-2 border-primary-500 rounded-2xl"
-            :data="data"
+            :data="
+              [...data].sort((a, b) => a.date.getTime() - b.date.getTime())
+            "
             @toggle="(id) => handleToggle({ id })"
             @delete="(id) => handleRemove({ id })"
           />
