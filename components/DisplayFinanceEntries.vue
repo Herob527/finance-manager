@@ -5,7 +5,7 @@ import { computed, h } from 'vue';
 import { CATEGORIES } from '~/src/constants';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 
-const props = defineProps<{ data: FinanceEntry[] }>();
+const props = defineProps<{ data: FinanceEntry[]; loading: boolean }>();
 
 const emit = defineEmits<{
   (event: 'toggle' | 'delete', id: number): void;
@@ -74,5 +74,5 @@ const columns = computed(
 );
 </script>
 <template>
-  <UTable :data="props.data" :columns="columns" />
+  <UTable :data="props.data" :columns="columns" :loading="props.loading" />
 </template>

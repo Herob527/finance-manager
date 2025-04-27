@@ -1,13 +1,38 @@
 <script setup lang="ts">
 import { liveQuery } from 'dexie';
-import { from } from 'rxjs';
+import { catchError, from, map, of } from 'rxjs';
 import { useObservable } from '@vueuse/rxjs';
 import { ChartDisplay, DisplayFinanceEntries } from '#components';
 import { useDatabase } from '#imports';
+import type { FinanceEntry } from '~/src/types/FinanceEntry';
 
 const test = useDatabase();
-
-const data = useObservable(from(liveQuery(async () => await test.getAll())));
+function createDataState<T>() {
+  return {
+    data: [] as T,
+    isLoading: true,
+    error: null as unknown | null,
+  };
+}
+const data$ = useObservable(
+  from(liveQuery(async () => await test.getAll())).pipe(
+    map((result) => ({
+      data: result,
+      isLoading: false,
+      error: null,
+    })),
+    catchError((error) =>
+      of({
+        data: [],
+        isLoading: false,
+        error,
+      }),
+    ),
+  ),
+  {
+    initialValue: createDataState<FinanceEntry[]>(),
+  },
+);
 
 const handleToggle = async ({ id }: { id: number }) => {
   await test.toggle(id);
@@ -18,7 +43,7 @@ const handleRemove = async ({ id }: { id: number }) => {
 };
 
 const processedData = computed(() => {
-  return (data.value ?? []).toSorted(
+  return (data$.value.data ?? []).toSorted(
     (a, b) => a.date.getTime() - b.date.getTime(),
   );
 });
@@ -27,15 +52,13 @@ const processedData = computed(() => {
 <template>
   <main class="container mx-auto flex flex-col">
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
-    <template v-if="data && data?.length > 0">
-      <DisplayFinanceEntries
-        class="border-2 border-primary-500 rounded-2xl"
-        :data="processedData"
-        @toggle="(id) => handleToggle({ id })"
-        @delete="(id) => handleRemove({ id })"
-      />
-    </template>
-    <span v-else> No data yet </span>
+    <DisplayFinanceEntries
+      class="border-2 border-primary-500 rounded-2xl"
+      :data="processedData"
+      :loading="data$.isLoading"
+      @toggle="(id) => handleToggle({ id })"
+      @delete="(id) => handleRemove({ id })"
+    />
     <div class="mt-4">
       <ChartDisplay :data="processedData.filter(({ enabled }) => enabled)" />
     </div>
