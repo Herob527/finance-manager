@@ -53,9 +53,17 @@ const processedData = computed(() => {
   <main class="container mx-auto flex flex-col">
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
     <DisplayFinanceEntries
-      class="border-2 border-primary-500 rounded-2xl"
+      :class="[
+        'border-2',
+        {
+          'border-primary-500': !data$.error,
+          'border-error-500': !!data$.error,
+        },
+        'rounded-2xl',
+      ]"
       :data="processedData"
       :loading="data$.isLoading"
+      :error="!!data$.error"
       @toggle="(id) => handleToggle({ id })"
       @delete="(id) => handleRemove({ id })"
     />

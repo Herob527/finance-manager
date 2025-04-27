@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { UButton, UCheckbox } from '#components';
+import { UButton, UCheckbox, UTable } from '#components';
 import type { TableColumn } from '@nuxt/ui';
 import { computed, h } from 'vue';
 import { CATEGORIES } from '~/src/constants';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 
-const props = defineProps<{ data: FinanceEntry[]; loading: boolean }>();
+defineProps<{
+  data: FinanceEntry[];
+  loading: boolean;
+  error: boolean;
+}>();
 
 const emit = defineEmits<{
   (event: 'toggle' | 'delete', id: number): void;
@@ -74,5 +78,11 @@ const columns = computed(
 );
 </script>
 <template>
-  <UTable :data="props.data" :columns="columns" :loading="props.loading" />
+  <UTable
+    :data="error ? [] : data"
+    :empty="error ? 'Error loading data' : 'No data yet'"
+    :columns="columns"
+    :loading="loading || error"
+    :loading-color="error ? 'error' : 'primary'"
+  />
 </template>
