@@ -7,13 +7,7 @@ import { useDatabase } from '#imports';
 
 const test = useDatabase();
 
-const data = useObservable(
-  from(
-    liveQuery(async () => {
-      return await test.getAll();
-    }),
-  ),
-);
+const data = useObservable(from(liveQuery(async () => await test.getAll())));
 
 const handleToggle = async ({ id }: { id: number }) => {
   await test.toggle(id);
