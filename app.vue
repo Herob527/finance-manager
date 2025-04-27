@@ -1,8 +1,28 @@
 <script setup lang="ts">
-import { NuxtPage, UApp } from '#components';
+import { NuxtPage, UApp, UNavigationMenu } from '#components';
+import type { NavigationMenuItem } from '@nuxt/ui';
+
+const items = ref<NavigationMenuItem[]>([
+  {
+    label: 'Main',
+    icon: 'i-lucide-book-open',
+    to: '/',
+  },
+  {
+    label: 'Add',
+    icon: 'i-lucide-plus',
+    to: '/add-data',
+  },
+  {
+    label: 'Display',
+    icon: 'i-lucide-box',
+    to: '/display-data',
+  },
+]);
 </script>
 
 <template>
+  <UNavigationMenu :items="items" class="w-full justify-center mt-4" />
   <UApp>
     <NuxtPage />
   </UApp>
