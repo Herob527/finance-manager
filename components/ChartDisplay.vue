@@ -59,7 +59,6 @@ onMounted(() => {
   const { keys, values } = processData();
   chartInstance = new Chart(chartContainer.value, {
     type: 'bar',
-
     data: {
       labels: keys,
       datasets: [
