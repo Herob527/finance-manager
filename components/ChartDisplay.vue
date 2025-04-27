@@ -31,8 +31,8 @@ const processData = (data = props.data) => {
   return {
     keys: Object.keys(groupedData),
     values: Object.values(groupedData).map((value) =>
-      (value ?? []).reduce((acc, cur) => {
-        currentSum += acc + cur.amount;
+      (value ?? []).reduce((_acc, cur) => {
+        currentSum += cur.amount;
         return currentSum;
       }, 0),
     ),
