@@ -74,7 +74,7 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
     </div>
     <div class="flex flex-col items-center justify-center">
       <UFormField name="date">
-        <UCalendar v-model="state.date" month-controls :weekStartsOn="1" />
+        <UCalendar v-model="state.date" month-controls :week-starts-on="1" />
       </UFormField>
     </div>
   </UForm>
