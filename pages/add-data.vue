@@ -68,7 +68,7 @@ const handleRemove = async ({ id }: { id: number }) => {
     <div class="flex flex-row gap-4">
       <AddFinanceEntry @submit="handleSubmit" />
       <DisplayFinanceEntries
-        :hiddenKeys="['enabled']"
+        :hidden-keys="['enabled']"
         :class="[
           'border-2',
           {
