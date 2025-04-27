@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { UBadge } from '#components';
 import { Chart } from 'chart.js/auto';
 import { onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 import cssVar from '~/utils/cssVar';
 
-const props = defineProps<{ data: FinanceEntry[] }>();
+const props = defineProps<{
+  data: FinanceEntry[];
+  loading: boolean;
+  error: boolean;
+}>();
 
 const chartContainer = ref<VNodeRef | null>(null);
 
@@ -38,7 +43,7 @@ const processData = (data = props.data) => {
 watch(
   () => props.data,
   (newData) => {
-    if (chartInstance) {
+    if (chartInstance && !props.error) {
       chartInstance.data.labels = processData(newData).keys;
       chartInstance.data.datasets[0].data = processData(newData).values;
       chartInstance.update();
@@ -54,7 +59,7 @@ onUnmounted(() => {
 });
 
 onMounted(() => {
-  if (chartContainer.value === null) return;
+  if (chartContainer.value === null || props.error) return;
   const { keys, values } = processData();
   chartInstance = new Chart(chartContainer.value, {
     type: 'bar',
@@ -74,5 +79,12 @@ onMounted(() => {
 });
 </script>
 <template>
+  <span v-if="loading">Loading data for chart...</span>
+  <UBadge
+    v-else-if="error"
+    size="xl"
+    color="error"
+    label="Error loading data for chart"
+  />
   <canvas ref="chartContainer" />
 </template>
