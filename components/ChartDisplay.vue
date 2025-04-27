@@ -67,6 +67,7 @@ onMounted(() => {
           label: 'Balance',
           data: values,
           backgroundColor: cssVar('--color-primary-500'),
+          borderColor: cssVar('--color-primary-600'),
           borderWidth: 1,
         },
       ],
