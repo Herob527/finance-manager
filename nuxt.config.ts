@@ -15,7 +15,13 @@ export default defineNuxtConfig({
     '@nuxt/test-utils',
     '@nuxt/ui',
   ],
-  typescript: { tsConfig: { compilerOptions: { baseUrl: '.' } } },
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        baseUrl: '.',
+      },
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },

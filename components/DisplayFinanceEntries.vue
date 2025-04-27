@@ -1,15 +1,14 @@
 <script setup lang="ts">
+import { UButton, UCheckbox } from '#components';
+import type { TableColumn } from '@nuxt/ui';
 import { computed, h } from 'vue';
-import type { FinanceEntry } from '../src/types/FinanceEntry';
-import UTable, { type TableColumn } from '@nuxt/ui/components/Table.vue';
-import UCheckbox from '@nuxt/ui/components/Checkbox.vue';
-import UButton from '@nuxt/ui/components/Button.vue';
-import { CATEGORIES } from '../src/constants';
+import { CATEGORIES } from '~/src/constants';
+import type { FinanceEntry } from '~/src/types/FinanceEntry';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 
 const emit = defineEmits<{
-  (event: 'toggle' | 'delete', id: number);
+  (event: 'toggle' | 'delete', id: number): void;
 }>();
 
 const columns = computed(

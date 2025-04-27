@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { type } from 'arktype';
 import { shallowReactive } from 'vue';
-import UForm from '@nuxt/ui/components/Form.vue';
-import UFormField from '@nuxt/ui/components/FormField.vue';
-import UCalendar from '@nuxt/ui/components/Calendar.vue';
-import type { FormSubmitEvent } from '@nuxt/ui';
 import { CalendarDate } from '@internationalized/date';
-import { CATEGORIES } from '../src/constants';
+import type { FormSubmitEvent } from '@nuxt/ui/dist/module';
+import {
+  UCalendar,
+  UForm,
+  UFormField,
+  UInput,
+  UInputNumber,
+  USelect,
+} from '#components';
+import { CATEGORIES } from '~/src/constants';
 
 const emit = defineEmits<{
   (e: 'submit', data: Schema): void;

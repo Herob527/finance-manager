@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
-import type { FinanceEntry } from '../src/types/FinanceEntry';
 import { Chart } from 'chart.js/auto';
-import cssVar from '../utils/cssVar';
-import groupByItems from '../utils/groupBy';
+import { onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
+import type { FinanceEntry } from '~/src/types/FinanceEntry';
+import cssVar from '~/utils/cssVar';
+import groupByItems from '~/utils/groupBy';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 

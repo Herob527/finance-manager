@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { liveQuery } from 'dexie';
-import AddFinanceEntry, {
-  type Schema,
-} from '../components/AddFinanceEntry.vue';
-import { useDatabase } from '../composable/use-database';
 import { from } from 'rxjs';
 import { useObservable } from '@vueuse/rxjs';
 import { getLocalTimeZone } from '@internationalized/date';
-import DisplayFinanceEntries from '../components/DisplayFinanceEntries.vue';
-import ChartDisplay from '../components/ChartDisplay.vue';
+import {
+  AddFinanceEntry,
+  ChartDisplay,
+  DisplayFinanceEntries,
+} from '#components';
+import type { Schema } from '~/components/AddFinanceEntry.vue';
+import { useDatabase } from '~/composable/use-database';
 
 const test = useDatabase();
 

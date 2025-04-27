@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from 'nuxt/app';
-import IndexedDBStorage from '../src/services/LocalDatabase';
-import LoggingStorage from '../src/services/DummyFinanceService';
+import LoggingStorage from '~/src/services/DummyFinanceService';
+import IndexedDBStorage from '~/src/services/LocalDatabase';
 
 export default defineNuxtPlugin({
   name: 'db-service-provider',
