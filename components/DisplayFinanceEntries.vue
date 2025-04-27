@@ -13,6 +13,7 @@ defineProps<{
   data: FinanceEntry[];
   loading: boolean;
   error: boolean;
+  hiddenKeys?: columnKey[];
 }>();
 
 const emit = defineEmits<{
@@ -80,6 +81,7 @@ const columns = computed(
       },
     ] as const satisfies TableColumn<FinanceEntry>[],
 );
+type columnKey = (typeof columns.value)[number]['accessorKey'];
 const table = useTemplateRef('table');
 
 const pagination = ref<PaginationState>({
@@ -94,7 +96,9 @@ const pagination = ref<PaginationState>({
       v-model:pagination="pagination"
       :data="error ? [] : data"
       :empty="error ? 'Error loading data' : 'No data yet'"
-      :columns="columns"
+      :columns="
+        columns.filter(({ accessorKey }) => !hiddenKeys?.includes(accessorKey))
+      "
       :pagination-options="{
         getPaginationRowModel: getPaginationRowModel(),
       }"
