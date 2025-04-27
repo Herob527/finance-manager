@@ -63,7 +63,7 @@ const handleRemove = async ({ id }: { id: number }) => {
 </script>
 
 <template>
-  <main class="container mx-auto flex flex-col">
+  <main class="container mx-auto flex flex-col mb-4">
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
     <div class="flex flex-row gap-4">
       <AddFinanceEntry @submit="handleSubmit" />
