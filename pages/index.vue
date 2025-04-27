@@ -9,7 +9,7 @@ import {
   DisplayFinanceEntries,
 } from '#components';
 import type { Schema } from '~/components/AddFinanceEntry.vue';
-import { useDatabase } from '~/composable/use-database';
+import { useDatabase } from '#imports';
 
 const test = useDatabase();
 
