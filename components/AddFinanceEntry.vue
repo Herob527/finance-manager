@@ -59,7 +59,11 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
     <div class="flex flex-col gap-4">
       <span class="font-bold text-2xl mb-4"> Fill the data </span>
       <UFormField label="Amount" name="amount">
-        <UInputNumber v-model="state.amount" />
+        <UInputNumber
+          v-model="state.amount"
+          :step="0.01"
+          :step-snapping="false"
+        />
       </UFormField>
 
       <UFormField label="Description" name="description">
