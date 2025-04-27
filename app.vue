@@ -24,7 +24,7 @@ const items = ref<NavigationMenuItem[]>([
 <template>
   <UNavigationMenu
     :items="items"
-    class="w-full justify-center p-4 sticky top-0 bg-neutral-900/50 z-10 backdrop-blur-md border-b-2 border-neutral-800"
+    class="w-full justify-center p-4 sticky top-0 bg-neutral-900/50 z-10 backdrop-blur-md border-b-2 border-primary-700"
   />
   <UApp>
     <NuxtPage />
