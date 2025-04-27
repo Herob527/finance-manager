@@ -68,7 +68,11 @@ const processedData = computed(() => {
       @delete="(id) => handleRemove({ id })"
     />
     <div class="mt-4">
-      <ChartDisplay :data="processedData.filter(({ enabled }) => enabled)" />
+      <ChartDisplay
+        :data="processedData.filter(({ enabled }) => enabled)"
+        :loading="data$.isLoading"
+        :error="!!data$.error"
+      />
     </div>
   </main>
 </template>
