@@ -3,7 +3,6 @@ import { Chart } from 'chart.js/auto';
 import { onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 import cssVar from '~/utils/cssVar';
-import groupByItems from '~/utils/groupBy';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 
@@ -15,7 +14,7 @@ const processData = (data = props.data) => {
   const formatter = new Intl.DateTimeFormat('en-AU', {
     month: 'long',
   });
-  const groupedData = groupByItems(
+  const groupedData = Object.groupBy(
     data.map((entry) => ({
       ...entry,
       amount: entry.amount,
@@ -27,7 +26,7 @@ const processData = (data = props.data) => {
   return {
     keys: Object.keys(groupedData),
     values: Object.values(groupedData).map((value) =>
-      value.reduce((acc, cur) => {
+      (value ?? []).reduce((acc, cur) => {
         currentSum += acc + cur.amount;
         return currentSum;
       }, 0),

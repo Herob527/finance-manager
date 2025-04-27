@@ -2,7 +2,6 @@
 import { type } from 'arktype';
 import { shallowReactive } from 'vue';
 import { CalendarDate } from '@internationalized/date';
-import type { FormSubmitEvent } from '@nuxt/ui/dist/module';
 import {
   UCalendar,
   UForm,
@@ -12,6 +11,7 @@ import {
   USelect,
 } from '#components';
 import { CATEGORIES } from '~/src/constants';
+import type { FormSubmitEvent } from '@nuxt/ui';
 
 const emit = defineEmits<{
   (e: 'submit', data: Schema): void;

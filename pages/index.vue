@@ -49,9 +49,7 @@ const handleRemove = async ({ id }: { id: number }) => {
         <template v-if="data && data?.length > 0">
           <DisplayFinanceEntries
             class="border-2 border-primary-500 rounded-2xl"
-            :data="
-              [...data].sort((a, b) => a.date.getTime() - b.date.getTime())
-            "
+            :data="data.toSorted((a, b) => a.date.getTime() - b.date.getTime())"
             @toggle="(id) => handleToggle({ id })"
             @delete="(id) => handleRemove({ id })"
           />
