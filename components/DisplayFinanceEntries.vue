@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { UButton, UCheckbox, UTable } from '#components';
-import { getPaginationRowModel } from '@tanstack/vue-table';
+import {
+  getPaginationRowModel,
+  type PaginationState,
+} from '@tanstack/vue-table';
 import type { TableColumn } from '@nuxt/ui';
-import { computed, h, type VNodeRef } from 'vue';
+import { computed, h } from 'vue';
 import { CATEGORIES } from '~/src/constants';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 
@@ -77,8 +80,9 @@ const columns = computed(
       },
     ] as const satisfies TableColumn<FinanceEntry>[],
 );
-const table = ref();
-const pagination = ref({
+const table = useTemplateRef('table');
+
+const pagination = ref<PaginationState>({
   pageIndex: 0,
   pageSize: 10,
 });
@@ -86,7 +90,7 @@ const pagination = ref({
 <template>
   <div class="flex flex-col">
     <UTable
-      :ref="table"
+      ref="table"
       v-model:pagination="pagination"
       :data="error ? [] : data"
       :empty="error ? 'Error loading data' : 'No data yet'"
