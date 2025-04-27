@@ -53,7 +53,7 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   <UForm
     :schema="schema"
     :state="state"
-    class="flex flex-row gap-4 border-primary-500 border-2 p-4 rounded-2xl"
+    class="flex flex-row gap-4 border-primary-500 border-2 p-4 rounded-2xl h-min"
     @submit="handleSubmit"
   >
     <div class="flex flex-col gap-4">
