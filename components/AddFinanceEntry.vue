@@ -46,6 +46,9 @@ const state = shallowReactive<Partial<Schema>>({
 
 const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   emit('submit', ev.data);
+  state.amount = undefined;
+  state.category = undefined;
+  state.description = undefined;
 };
 </script>
 
