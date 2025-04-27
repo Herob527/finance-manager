@@ -20,7 +20,7 @@ const handleSubmit = (data: Schema) => {
 <template>
   <main class="container mx-auto flex flex-col">
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
-    <div class="flex flex-row gap-4 mt-4">
+    <div class="flex flex-row gap-4">
       <AddFinanceEntry @submit="handleSubmit" />
     </div>
   </main>
