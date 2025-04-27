@@ -2,21 +2,14 @@
 import { onMounted, onUnmounted, ref, watch, type VNodeRef } from 'vue';
 import type { FinanceEntry } from '../src/types/FinanceEntry';
 import { Chart } from 'chart.js/auto';
+import cssVar from '../utils/cssVar';
+import groupByItems from '../utils/groupBy';
 
 const props = defineProps<{ data: FinanceEntry[] }>();
 
 const chartContainer = ref<VNodeRef | null>(null);
 
 let chartInstance: Chart | undefined;
-
-// Suggested by claude
-function groupByItems<T, K extends PropertyKey>(
-  items: Iterable<T>,
-  keySelector: (item: T) => K,
-): Record<K, T[]> {
-  // @ts-expect-error - Using native Object.groupBy but ignoring TypeScript errors
-  return Object.groupBy(items, keySelector);
-}
 
 const processData = (data = props.data) => {
   const formatter = new Intl.DateTimeFormat('en-AU', {
@@ -45,7 +38,7 @@ const processData = (data = props.data) => {
 // Watch for data changes
 watch(
   () => props.data,
-  (newData, oldData) => {
+  (newData) => {
     if (chartInstance) {
       chartInstance.data.labels = processData(newData).keys;
       chartInstance.data.datasets[0].data = processData(newData).values;
@@ -71,7 +64,10 @@ onMounted(() => {
       labels: keys,
       datasets: [
         {
+          label: 'Balance',
           data: values,
+          backgroundColor: cssVar('--color-primary-500'),
+          borderWidth: 1,
         },
       ],
     },
