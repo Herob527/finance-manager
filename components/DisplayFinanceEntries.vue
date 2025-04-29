@@ -90,7 +90,7 @@ const pagination = ref<PaginationState>({
 });
 </script>
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col p-4">
     <UTable
       ref="table"
       v-model:pagination="pagination"
