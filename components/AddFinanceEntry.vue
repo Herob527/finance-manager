@@ -7,11 +7,11 @@ import {
   UInputNumber,
   USelect,
 } from '#components';
-import { CalendarDate } from '@internationalized/date';
+import { CalendarDate, getLocalTimeZone } from '@internationalized/date';
 import type { FormSubmitEvent } from '@nuxt/ui';
 import { type } from 'arktype';
 import { shallowReactive } from 'vue';
-import { CATEGORIES, type AddMode } from '~/src/constants';
+import { CATEGORIES, SERIES_TYPES, type AddMode } from '~/src/constants';
 
 const emit = defineEmits<{
   (e: 'submit', data: Schema): void;
@@ -19,32 +19,48 @@ const emit = defineEmits<{
 
 const props = defineProps<{ mode: AddMode }>();
 
-const schema = type({
-  amount: type.number.configure({
-    message: (ctx) => {
-      return ctx.code === 'domain' ? 'Amount is required' : '';
-    },
+const schema = computed(() =>
+  type({
+    amount: type.number.configure({
+      message: (ctx) => {
+        return ctx.code === 'domain' ? 'Amount is required' : '';
+      },
+    }),
+    description: type.string
+      .moreThanLength(3)
+      .or('undefined')
+      .or(type.string.atMostLength(0)),
+    category: type.enumerated(...CATEGORIES.map((c) => c.value)).configure({
+      message: (ctx) =>
+        ctx.code === 'predicate' ? 'Category must be picked' : '',
+    }),
+    date: type.instanceOf(CalendarDate).configure({
+      message: (ctx) => (ctx.code === 'proto' ? 'Date is required' : ''),
+    }),
+    seriesType:
+      props.mode === 'series'
+        ? type.enumerated(...SERIES_TYPES.map((c) => c.value)).configure({
+            message: 'Series type is required',
+          })
+        : type.undefined,
+    untilDate:
+      props.mode === 'series'
+        ? type.instanceOf(CalendarDate).configure({
+            message: (ctx) => (ctx.code === 'proto' ? 'Date is required' : ''),
+          })
+        : type.undefined,
   }),
-  description: type.string
-    .moreThanLength(3)
-    .or('undefined')
-    .or(type.string.atMostLength(0)),
-  category: type.enumerated(...CATEGORIES.map((c) => c.value)).configure({
-    message: (ctx) =>
-      ctx.code === 'predicate' ? 'Category must be picked' : '',
-  }),
-  date: type.instanceOf(CalendarDate).configure({
-    message: (ctx) => (ctx.code === 'proto' ? 'Date is required' : ''),
-  }),
-});
+);
 
-export type Schema = typeof schema.infer;
+export type Schema = typeof schema.value.infer;
 
 const state = shallowReactive<Partial<Schema>>({
   date: undefined,
   amount: undefined,
   category: undefined,
   description: undefined,
+  seriesType: undefined,
+  untilDate: undefined,
 });
 
 const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
@@ -52,9 +68,16 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   state.amount = undefined;
   state.category = undefined;
   state.description = undefined;
+  state.seriesType = undefined;
+  state.untilDate = undefined;
 };
 
 const form = useTemplateRef('form');
+
+watch(
+  () => state,
+  (selection) => console.log(selection),
+);
 
 watch(
   () => props.mode,
@@ -63,6 +86,8 @@ watch(
     state.amount = undefined;
     state.category = undefined;
     state.description = undefined;
+    state.seriesType = undefined;
+    state.untilDate = undefined;
     form.value?.clear();
   },
   {
@@ -96,6 +121,41 @@ watch(
 
       <UFormField label="Category" name="category">
         <USelect v-model="state.category" :items="CATEGORIES" class="w-48" />
+      </UFormField>
+
+      <UFormField
+        label="Series type"
+        name="seriesType"
+        :class="{ hidden: mode !== 'series' }"
+      >
+        <URadioGroup v-model="state.seriesType" :items="SERIES_TYPES" />
+      </UFormField>
+      <UFormField
+        label="Until date"
+        name="untilDate"
+        :class="{ hidden: mode !== 'series' }"
+      >
+        <UPopover>
+          <UButton
+            :label="
+              state.untilDate
+                ? Intl.DateTimeFormat('pl-PL', {}).format(
+                    state.untilDate.toDate(getLocalTimeZone()),
+                  )
+                : 'Open'
+            "
+            color="neutral"
+            class="w-full"
+            variant="subtle"
+          />
+          <template #content>
+            <UCalendar
+              v-model="state.untilDate"
+              month-controls
+              :week-starts-on="1"
+            />
+          </template>
+        </UPopover>
       </UFormField>
 
       <UButton type="submit" class="inline-flex w-min"> Submit </UButton>
