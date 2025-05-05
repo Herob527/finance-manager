@@ -3,11 +3,18 @@ import type {
   FinanceEntry,
   FinanceRepository,
   ObservableData,
+  SeriesParam,
 } from '../types/FinanceEntry';
 
 export default class LoggingStorage implements FinanceRepository {
   constructor() {
     console.log('Dummy server started');
+  }
+  addSeries(
+    entry: Omit<FinanceEntry, 'id'>,
+    params: SeriesParam,
+  ): Promise<void> {
+    throw new Error('Method not implemented.');
   }
   toggle(id: number): Promise<void> {
     console.log('Dummy server toggling entry', id);

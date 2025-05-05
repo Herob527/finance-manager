@@ -3,11 +3,13 @@ import type {
   FinanceEntry,
   FinanceRepository,
   ObservableData,
+  SeriesParam,
 } from '../types/FinanceEntry';
 import type { Observable } from 'rxjs';
 
 import { liveQuery } from 'dexie';
 import { from, map, catchError, of } from 'rxjs';
+import { DateTime } from 'luxon';
 
 type DexieStore = Dexie & {
   entries: EntityTable<FinanceEntry, 'id'>;
@@ -27,15 +29,33 @@ export default class IndexedDBStorage implements FinanceRepository {
     });
     this.db = db;
   }
-  async add(entries: FinanceEntry[]): Promise<void> {
-    const promises = entries.map((entry) => this.db.entries.add(entry));
-    const settled = await Promise.allSettled(promises);
-    const rejected = settled.filter((result) => result.status === 'rejected');
-    if (rejected.length > 0) {
-      throw new Error(`${rejected.length} entries failed to add`, {
-        cause: rejected,
-      });
+
+  // Series occurs monthly for the time being
+  async addSeries(
+    entry: Omit<FinanceEntry, 'id'>,
+    params: SeriesParam,
+  ): Promise<void> {
+    const { end } = params;
+    const { date: start } = entry;
+    if (start > end) {
+      throw new Error('Start date must be before end date');
     }
+    const endDate = DateTime.fromJSDate(end);
+    const startDate = DateTime.fromJSDate(start);
+    const monthDiff = endDate.diff(startDate, 'months').months;
+    console.log(monthDiff);
+    const data = Array(Math.trunc(monthDiff))
+      .fill(0)
+      .map((_, i) => ({
+        ...entry,
+        date: startDate.plus({ months: i }).toJSDate(),
+      }));
+    console.log(data);
+    await this.db.entries.bulkAdd(data);
+  }
+
+  async add(entries: FinanceEntry[]): Promise<void> {
+    await this.db.entries.bulkAdd(entries);
   }
 
   async getAll(): Promise<FinanceEntry[]> {

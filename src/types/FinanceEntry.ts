@@ -15,8 +15,16 @@ export interface ObservableData {
   error: unknown;
 }
 
+export interface SeriesParam {
+  end: Date;
+}
+
 export interface FinanceRepository {
   add(entry: Omit<FinanceEntry, 'id'>[]): Promise<void>;
+  addSeries(
+    entry: Omit<FinanceEntry, 'id'>,
+    params: SeriesParam,
+  ): Promise<void>;
   getAll(): Promise<FinanceEntry[]>;
   update(id: number, entry: FinanceEntry): Promise<void>;
   delete(id: number): Promise<void>;
