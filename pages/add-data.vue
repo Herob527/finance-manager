@@ -7,6 +7,8 @@ import { useObservable } from '@vueuse/rxjs';
 import { liveQuery } from 'dexie';
 import { from, map, catchError, of } from 'rxjs';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
+import type { TabsItem } from '@nuxt/ui';
+import type { AddMode } from '~/src/constants';
 
 const test = useDatabase();
 
@@ -60,13 +62,31 @@ const handleToggle = async ({ id }: { id: number }) => {
 const handleRemove = async ({ id }: { id: number }) => {
   await test.delete(id);
 };
+
+const items = ref<TabsItem[]>([
+  {
+    label: 'Occurrence',
+    icon: 'i-lucide-user',
+    value: 'occurrence',
+  },
+  {
+    label: 'Series',
+    icon: 'i-lucide-lock',
+    value: 'series',
+  },
+]);
+
+const addMode = ref<AddMode>('occurrence');
 </script>
 
 <template>
   <main class="container mx-auto flex flex-col mb-4">
     <h1 class="text-4xl font-bold my-12">Finance Tracker</h1>
     <div class="flex flex-row gap-4">
-      <AddFinanceEntry @submit="handleSubmit" />
+      <div>
+        <UTabs v-model="addMode" :items="items" class="w-full" />
+        <AddFinanceEntry :mode="addMode" @submit="handleSubmit" />
+      </div>
       <DisplayFinanceEntries
         :hidden-keys="['enabled']"
         :class="[

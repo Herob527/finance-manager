@@ -82,6 +82,7 @@ const columns = computed(
     ] as const satisfies TableColumn<FinanceEntry>[],
 );
 type columnKey = (typeof columns.value)[number]['accessorKey'];
+
 const table = useTemplateRef('table');
 
 const pagination = ref<PaginationState>({

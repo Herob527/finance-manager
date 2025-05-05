@@ -14,3 +14,5 @@ export const CATEGORIES = (
     'Other',
   ] as const
 ).map((c) => ({ value: c.toLowerCase() as Lowercase<typeof c>, label: c }));
+
+export type AddMode = 'series' | 'occurrence';

@@ -8,14 +8,16 @@ import {
   USelect,
 } from '#components';
 import { CalendarDate } from '@internationalized/date';
-import type { FormSubmitEvent, TabsItem } from '@nuxt/ui';
+import type { FormSubmitEvent } from '@nuxt/ui';
 import { type } from 'arktype';
 import { shallowReactive } from 'vue';
-import { CATEGORIES } from '~/src/constants';
+import { CATEGORIES, type AddMode } from '~/src/constants';
 
 const emit = defineEmits<{
   (e: 'submit', data: Schema): void;
 }>();
+
+const props = defineProps<{ mode: AddMode }>();
 
 const schema = type({
   amount: type.number.configure({
@@ -35,6 +37,7 @@ const schema = type({
     message: (ctx) => (ctx.code === 'proto' ? 'Date is required' : ''),
   }),
 });
+
 export type Schema = typeof schema.infer;
 
 const state = shallowReactive<Partial<Schema>>({
@@ -51,52 +54,56 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   state.description = undefined;
 };
 
-const items = ref<TabsItem[]>([
-  {
-    label: 'Occurrence',
-    icon: 'i-lucide-user',
+const form = useTemplateRef('form');
+
+watch(
+  () => props.mode,
+  () => {
+    state.date = undefined;
+    state.amount = undefined;
+    state.category = undefined;
+    state.description = undefined;
+    form.value?.clear();
   },
   {
-    label: 'Series',
-    icon: 'i-lucide-lock',
+    immediate: true,
   },
-]);
+);
 </script>
 
 <template>
-  <section>
-    <UTabs :items="items" class="w-full" />
-    <UForm
-      :schema="schema"
-      :state="state"
-      class="flex flex-row gap-4 border-primary-500 border-2 p-4 rounded-2xl h-min"
-      @submit="handleSubmit"
-    >
-      <div class="flex flex-col gap-4">
-        <span class="font-bold text-2xl mb-4"> Fill the data </span>
-        <UFormField label="Amount" name="amount">
-          <UInputNumber
-            v-model="state.amount"
-            :step="0.01"
-            :step-snapping="false"
-          />
-        </UFormField>
+  <UForm
+    ref="form"
+    :schema="schema"
+    :state="state"
+    class="flex flex-row gap-4 border-primary-500 border-2 p-4 rounded-2xl h-min"
+    @submit="handleSubmit"
+  >
+    <div class="flex flex-col gap-4">
+      <span class="font-bold text-2xl mb-4"> Fill the data </span>
+      <UFormField label="Amount" name="amount">
+        <UInputNumber
+          :value="state.amount"
+          :step="0.01"
+          :step-snapping="false"
+          @input="state.amount = Number($event.target.value)"
+        />
+      </UFormField>
 
-        <UFormField label="Description" name="description">
-          <UInput v-model="state.description" />
-        </UFormField>
+      <UFormField label="Description" name="description">
+        <UInput v-model="state.description" />
+      </UFormField>
 
-        <UFormField label="Category" name="category">
-          <USelect v-model="state.category" :items="CATEGORIES" class="w-48" />
-        </UFormField>
+      <UFormField label="Category" name="category">
+        <USelect v-model="state.category" :items="CATEGORIES" class="w-48" />
+      </UFormField>
 
-        <UButton type="submit" class="inline-flex w-min"> Submit </UButton>
-      </div>
-      <div class="flex flex-col items-center justify-center">
-        <UFormField name="date">
-          <UCalendar v-model="state.date" month-controls :week-starts-on="1" />
-        </UFormField>
-      </div>
-    </UForm>
-  </section>
+      <UButton type="submit" class="inline-flex w-min"> Submit </UButton>
+    </div>
+    <div class="flex flex-col items-center justify-center">
+      <UFormField name="date">
+        <UCalendar v-model="state.date" month-controls :week-starts-on="1" />
+      </UFormField>
+    </div>
+  </UForm>
 </template>
