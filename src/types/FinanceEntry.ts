@@ -16,7 +16,7 @@ export interface ObservableData {
 }
 
 export interface FinanceRepository {
-  add(entry: Omit<FinanceEntry, 'id'>): Promise<void>;
+  add(entry: Omit<FinanceEntry, 'id'>[]): Promise<void>;
   getAll(): Promise<FinanceEntry[]>;
   update(id: number, entry: FinanceEntry): Promise<void>;
   delete(id: number): Promise<void>;

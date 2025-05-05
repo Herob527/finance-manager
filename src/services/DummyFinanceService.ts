@@ -22,7 +22,7 @@ export default class LoggingStorage implements FinanceRepository {
     return Promise.resolve();
   }
 
-  add(entry: FinanceEntry): Promise<void> {
+  add(entry: FinanceEntry[]): Promise<void> {
     console.log('Dummy server adding entry', entry);
     return Promise.resolve();
   }

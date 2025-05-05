@@ -27,8 +27,15 @@ export default class IndexedDBStorage implements FinanceRepository {
     });
     this.db = db;
   }
-  async add(entry: FinanceEntry): Promise<void> {
-    await this.db.entries.add(entry);
+  async add(entries: FinanceEntry[]): Promise<void> {
+    const promises = entries.map((entry) => this.db.entries.add(entry));
+    const settled = await Promise.allSettled(promises);
+    const rejected = settled.filter((result) => result.status === 'rejected');
+    if (rejected.length > 0) {
+      throw new Error(`${rejected.length} entries failed to add`, {
+        cause: rejected,
+      });
+    }
   }
 
   async getAll(): Promise<FinanceEntry[]> {
