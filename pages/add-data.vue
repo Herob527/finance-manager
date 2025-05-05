@@ -11,9 +11,17 @@ import type { AddMode } from '~/src/constants';
 const dbInstance = useDatabase();
 
 const handleSubmit = async (data: Schema) => {
-  if (data.seriesType !== undefined && data.untilDate !== undefined) {
-    const months = Math.abs(data.date.month - data.untilDate.month) + 1;
-    console.log(months);
+  if (data.untilDate !== undefined) {
+    dbInstance.addSeries(
+      {
+        date: data.date.toDate(getLocalTimeZone()),
+        description: data.description,
+        amount: data.amount,
+        category: data.category,
+        enabled: true,
+      },
+      { end: data.untilDate.toDate(getLocalTimeZone()) },
+    );
   } else {
     dbInstance.add([
       {
