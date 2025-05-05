@@ -4,16 +4,14 @@ import { AddFinanceEntry } from '#components';
 import type { Schema } from '~/components/AddFinanceEntry.vue';
 import { useDatabase } from '#imports';
 import { useObservable } from '@vueuse/rxjs';
-import { liveQuery } from 'dexie';
-import { from, map, catchError, of } from 'rxjs';
 import type { FinanceEntry } from '~/src/types/FinanceEntry';
 import type { TabsItem } from '@nuxt/ui';
 import type { AddMode } from '~/src/constants';
 
-const test = useDatabase();
+const dbInstance = useDatabase();
 
-const handleSubmit = (data: Schema) => {
-  test.add({
+const handleSubmit = async (data: Schema) => {
+  dbInstance.add({
     date: data.date.toDate(getLocalTimeZone()),
     description: data.description,
     amount: data.amount,
@@ -29,25 +27,9 @@ function createDataState<T>() {
     error: null as unknown | null,
   };
 }
-const data$ = useObservable(
-  from(liveQuery(async () => await test.getAll())).pipe(
-    map((result) => ({
-      data: result,
-      isLoading: false,
-      error: null,
-    })),
-    catchError((error) =>
-      of({
-        data: [],
-        isLoading: false,
-        error,
-      }),
-    ),
-  ),
-  {
-    initialValue: createDataState<FinanceEntry[]>(),
-  },
-);
+const data$ = useObservable(dbInstance.observe(), {
+  initialValue: createDataState<FinanceEntry[]>(),
+});
 
 const processedData = computed(() => {
   return (data$.value.data ?? []).toSorted(
@@ -56,11 +38,11 @@ const processedData = computed(() => {
 });
 
 const handleToggle = async ({ id }: { id: number }) => {
-  await test.toggle(id);
+  await dbInstance.toggle(id);
 };
 
 const handleRemove = async ({ id }: { id: number }) => {
-  await test.delete(id);
+  await dbInstance.delete(id);
 };
 
 const items = ref<TabsItem[]>([
