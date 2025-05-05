@@ -1,5 +1,13 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { FinanceEntry, FinanceRepository } from '../types/FinanceEntry';
+import type {
+  FinanceEntry,
+  FinanceRepository,
+  ObservableData,
+} from '../types/FinanceEntry';
+import type { Observable } from 'rxjs';
+
+import { liveQuery } from 'dexie';
+import { from, map, catchError, of } from 'rxjs';
 
 type DexieStore = Dexie & {
   entries: EntityTable<FinanceEntry, 'id'>;
@@ -42,5 +50,22 @@ export default class IndexedDBStorage implements FinanceRepository {
       ...entry,
       enabled: !(entry.enabled ?? true),
     });
+  }
+  observe(): Observable<ObservableData> {
+    const observable = from(liveQuery(async () => await this.getAll())).pipe(
+      map((result) => ({
+        data: result,
+        isLoading: false,
+        error: null,
+      })),
+      catchError((error) =>
+        of({
+          data: [],
+          isLoading: false,
+          error,
+        }),
+      ),
+    );
+    return observable;
   }
 }

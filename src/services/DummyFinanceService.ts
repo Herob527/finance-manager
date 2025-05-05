@@ -1,4 +1,9 @@
-import type { FinanceEntry, FinanceRepository } from '../types/FinanceEntry';
+import { Observable } from 'rxjs';
+import type {
+  FinanceEntry,
+  FinanceRepository,
+  ObservableData,
+} from '../types/FinanceEntry';
 
 export default class LoggingStorage implements FinanceRepository {
   constructor() {
@@ -25,5 +30,14 @@ export default class LoggingStorage implements FinanceRepository {
   getAll(): Promise<FinanceEntry[]> {
     console.log('Dummy server getting all entries');
     return Promise.resolve([]);
+  }
+  observe(): Observable<ObservableData> {
+    return new Observable((observer) => {
+      observer.next({
+        data: [],
+        isLoading: false,
+        error: null,
+      });
+    });
   }
 }
