@@ -21,11 +21,13 @@ const props = defineProps<{ mode: AddMode }>();
 
 const schema = computed(() =>
   type({
-    amount: type.number.configure({
-      message: (ctx) => {
-        return ctx.code === 'domain' ? 'Amount is required' : '';
-      },
-    }),
+    amount: type.string
+      .pipe((val) => Number.parseFloat(val.replace(',', '.')))
+      .configure({
+        message: (ctx) => {
+          return ctx.code === 'domain' ? 'Amount is required' : '';
+        },
+      }),
     description: type.string
       .moreThanLength(3)
       .or('undefined')
@@ -52,14 +54,14 @@ const schema = computed(() =>
   }),
 );
 
-export type Schema = typeof schema.value.infer;
+export type Schema = typeof schema.value.inferIn;
 
 const state = shallowReactive<Partial<Schema>>({
   date: undefined,
   amount: undefined,
   category: undefined,
   description: undefined,
-  seriesType: undefined,
+  seriesType: props.mode === 'series' ? SERIES_TYPES[0].value : undefined,
   untilDate: undefined,
 });
 
@@ -68,7 +70,8 @@ const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
   state.amount = undefined;
   state.category = undefined;
   state.description = undefined;
-  state.seriesType = undefined;
+  state.seriesType =
+    props.mode === 'series' ? SERIES_TYPES[0].value : undefined;
   state.untilDate = undefined;
 };
 
@@ -86,7 +89,8 @@ watch(
     state.amount = undefined;
     state.category = undefined;
     state.description = undefined;
-    state.seriesType = undefined;
+    state.seriesType =
+      props.mode === 'series' ? SERIES_TYPES[0].value : undefined;
     state.untilDate = undefined;
     form.value?.clear();
   },
@@ -94,6 +98,26 @@ watch(
     immediate: true,
   },
 );
+
+const processNumber = (value: string) => {
+  const trimmedValue = value.trim();
+  const commasCharacters = ['.', ','];
+  const commasCount = value.match(/[.,]/g)?.length ?? 0;
+  const endsWithComma = commasCharacters.some((char) =>
+    trimmedValue.endsWith(char),
+  );
+  const addTrailingZeros = endsWithComma && commasCount === 1;
+  if (endsWithComma && commasCount > 1) {
+    const processedValue = trimmedValue.replace(/[,.]{2,}|[,.]+$/g, '');
+    return processedValue;
+  }
+
+  if (addTrailingZeros) {
+    return `${trimmedValue}00`;
+  }
+  const parts = trimmedValue.split(/[.,]/) as [string] | [string, string];
+  return parts.join('.');
+};
 </script>
 
 <template>
@@ -111,7 +135,7 @@ watch(
           :value="state.amount"
           :step="0.01"
           :step-snapping="false"
-          @input="state.amount = Number($event.target.value)"
+          @input="state.amount = processNumber($event.target.value)"
         />
       </UFormField>
 
@@ -129,6 +153,33 @@ watch(
         :class="{ hidden: mode !== 'series' }"
       >
         <URadioGroup v-model="state.seriesType" :items="SERIES_TYPES" />
+      </UFormField>
+
+      <UFormField
+        :label="mode === 'occurrence' ? 'Date' : 'Start date'"
+        name="date"
+      >
+        <UPopover>
+          <UButton
+            :label="
+              state.date
+                ? Intl.DateTimeFormat('pl-PL', {}).format(
+                    state.date.toDate(getLocalTimeZone()),
+                  )
+                : 'Open'
+            "
+            color="neutral"
+            class="w-full"
+            variant="subtle"
+          />
+          <template #content>
+            <UCalendar
+              v-model="state.date"
+              month-controls
+              :week-starts-on="1"
+            />
+          </template>
+        </UPopover>
       </UFormField>
       <UFormField
         label="Until date"
@@ -159,11 +210,6 @@ watch(
       </UFormField>
 
       <UButton type="submit" class="inline-flex w-min"> Submit </UButton>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-      <UFormField name="date">
-        <UCalendar v-model="state.date" month-controls :week-starts-on="1" />
-      </UFormField>
     </div>
   </UForm>
 </template>
