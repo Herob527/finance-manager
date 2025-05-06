@@ -14,7 +14,7 @@ import { shallowReactive } from 'vue';
 import { CATEGORIES, SERIES_TYPES, type AddMode } from '~/src/constants';
 
 const emit = defineEmits<{
-  (e: 'submit', data: Schema): void;
+  (e: 'submit', data: Schema['inferOut']): void;
 }>();
 
 const props = defineProps<{ mode: AddMode }>();
@@ -54,9 +54,9 @@ const schema = computed(() =>
   }),
 );
 
-export type Schema = typeof schema.value.inferIn;
+export type Schema = typeof schema.value;
 
-const state = shallowReactive<Partial<Schema>>({
+const state = shallowReactive<Partial<Schema['inferIn']>>({
   date: undefined,
   amount: undefined,
   category: undefined,
@@ -65,7 +65,7 @@ const state = shallowReactive<Partial<Schema>>({
   untilDate: undefined,
 });
 
-const handleSubmit = (ev: FormSubmitEvent<Schema>) => {
+const handleSubmit = (ev: FormSubmitEvent<Schema['inferOut']>) => {
   emit('submit', ev.data);
   state.amount = undefined;
   state.category = undefined;
