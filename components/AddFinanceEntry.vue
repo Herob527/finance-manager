@@ -77,10 +77,11 @@ const handleSubmit = (ev: FormSubmitEvent<Schema['inferOut']>) => {
 
 const form = useTemplateRef('form');
 
-watch(
-  () => state,
-  (selection) => console.log(selection),
-);
+const openedForm = ref<'untilDate' | 'date' | null>(null);
+
+watch([() => state.untilDate, () => state.date], () => {
+  openedForm.value = null;
+});
 
 watch(
   () => props.mode,
@@ -159,7 +160,7 @@ const processNumber = (value: string) => {
         :label="mode === 'occurrence' ? 'Date' : 'Start date'"
         name="date"
       >
-        <UPopover>
+        <UPopover :open="openedForm === 'date'">
           <UButton
             :label="
               state.date
@@ -171,6 +172,7 @@ const processNumber = (value: string) => {
             color="neutral"
             class="w-full"
             variant="subtle"
+            @click="openedForm = 'date'"
           />
           <template #content>
             <UCalendar
@@ -186,7 +188,7 @@ const processNumber = (value: string) => {
         name="untilDate"
         :class="{ hidden: mode !== 'series' }"
       >
-        <UPopover>
+        <UPopover :open="openedForm === 'untilDate'">
           <UButton
             :label="
               state.untilDate
@@ -198,6 +200,7 @@ const processNumber = (value: string) => {
             color="neutral"
             class="w-full"
             variant="subtle"
+            @click="openedForm = 'untilDate'"
           />
           <template #content>
             <UCalendar
