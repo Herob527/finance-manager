@@ -20,19 +20,29 @@ export default class IndexedDBStorage implements FinanceRepository {
 
   private readonly db: DexieStore;
 
-  private readonly DB_VERSION = 1;
+  private readonly DB_VERSION = 4;
 
   constructor() {
     const db = new Dexie('FinanceDB') as DexieStore;
-    db.version(this.DB_VERSION).stores({
-      entries: '++id, amount, date, description, category, enabled',
-    });
+    db.version(this.DB_VERSION)
+      .stores({
+        entries:
+          '++id, amount, date, insertDate, description, category, enabled',
+      })
+      .upgrade((trans) => {
+        trans
+          .table('entries')
+          .toCollection()
+          .modify((entry) => {
+            entry.insertDate = new Date();
+          });
+      });
     this.db = db;
   }
 
   // Series occurs monthly for the time being
   async addSeries(
-    entry: Omit<FinanceEntry, 'id'>,
+    entry: Omit<FinanceEntry, 'id' | 'insertDate'>,
     params: SeriesParam,
   ): Promise<void> {
     const { end } = params;
@@ -49,17 +59,22 @@ export default class IndexedDBStorage implements FinanceRepository {
       .map((_, i) => ({
         ...entry,
         date: startDate.plus({ months: i }).toJSDate(),
+        insertDate: new Date(),
       }));
     console.log(data);
     await this.db.entries.bulkAdd(data);
   }
 
   async add(entries: FinanceEntry[]): Promise<void> {
-    await this.db.entries.bulkAdd(entries);
+    await this.db.entries.bulkAdd(
+      entries.map((entry) => ({ ...entry, insertDate: new Date() })),
+    );
   }
 
   async getAll(): Promise<FinanceEntry[]> {
-    return this.db.entries.toArray();
+    return (await this.db.entries.toArray()).toSorted((a, b) =>
+      a.insertDate > b.insertDate ? -1 : 1,
+    );
   }
 
   async update(id: number, entry: FinanceEntry): Promise<void> {

@@ -47,9 +47,7 @@ const data$ = useObservable(dbInstance.observe(), {
 });
 
 const processedData = computed(() => {
-  return (data$.value.data ?? []).toSorted(
-    (a, b) => a.date.getTime() - b.date.getTime(),
-  );
+  return data$.value.data ?? [];
 });
 
 const handleToggle = async ({ id }: { id: number }) => {

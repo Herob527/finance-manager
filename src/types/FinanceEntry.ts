@@ -5,6 +5,7 @@ export interface FinanceEntry {
   amount: number; // Expense is just negative
   date: Date;
   description: string;
+  insertDate: Date;
   category: string;
   enabled: boolean;
 }
@@ -20,9 +21,9 @@ export interface SeriesParam {
 }
 
 export interface FinanceRepository {
-  add(entry: Omit<FinanceEntry, 'id'>[]): Promise<void>;
+  add(entry: Omit<FinanceEntry, 'id' | 'insertDate'>[]): Promise<void>;
   addSeries(
-    entry: Omit<FinanceEntry, 'id'>,
+    entry: Omit<FinanceEntry, 'id' | 'insertDate'>,
     params: SeriesParam,
   ): Promise<void>;
   getAll(): Promise<FinanceEntry[]>;
