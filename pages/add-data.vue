@@ -10,7 +10,7 @@ import type { AddMode } from '~/src/constants';
 
 const dbInstance = useDatabase();
 
-const handleSubmit = async (data: Schema) => {
+const handleSubmit = async (data: Schema['inferOut']) => {
   if (data.untilDate !== undefined) {
     dbInstance.addSeries(
       {
